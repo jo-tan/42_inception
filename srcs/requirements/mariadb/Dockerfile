@@ -1,5 +1,5 @@
 # use debian as the base image
-FROM debian:buster
+FROM debian:bullseye
 
 # install/update MariaDB and other dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y mariadb-server mariadb-client procps

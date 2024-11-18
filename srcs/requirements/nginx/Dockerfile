@@ -1,4 +1,4 @@
-FROM debian:bookworm
+FROM debian:bullseye
 
 #this install nginx/openssl and remove the apt cache to reduce image size.
 RUN apt -y update && apt install -y nginx && apt install openssl -y \

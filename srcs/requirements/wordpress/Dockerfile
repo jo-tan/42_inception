@@ -1,5 +1,5 @@
 #pull base image
-FROM debian:bookworm
+FROM debian:bullseye
 
 #instell/upgrade the system and dependencies
 RUN apt-get update -y \
