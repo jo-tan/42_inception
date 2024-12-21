@@ -17,7 +17,7 @@ RUN chmod -R 755 /var/lib/mysql/
 
 EXPOSE 3306
 
-COPY ./tools/dbscript.sh ./
+COPY ./dbscript.sh ./
 RUN chmod +x ./dbscript.sh
 
 #defin entrypoint command to run when container starts

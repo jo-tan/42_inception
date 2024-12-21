@@ -28,7 +28,7 @@ RUN chmod -R 755 /var/www/*
 
 EXPOSE 9000
 
-COPY ./tools/wpscript.sh ./
+COPY ./wpscript.sh ./
 RUN chmod +x ./wpscript.sh
 
 #copy WP configuration script to the root directory in the container

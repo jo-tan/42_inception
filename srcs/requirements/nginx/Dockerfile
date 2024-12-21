@@ -1,26 +1,22 @@
 FROM debian:bullseye
 
-#this install nginx/openssl and remove the apt cache to reduce image size.
-RUN apt -y update && apt install -y nginx && apt install openssl -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt install -y iputils-ping && \
+    apt-get install -y nginx openssl && \
+    rm -rf /var/lib/apt/lists/*
 
-#create a dir for the ssl certificate
-RUN mkdir /etc/nginx/ssl
+COPY ./conf/nginx.conf    /etc/nginx/sites-available/jo-tan.42.fr.conf
 
-#generate ssl certif
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
-       -out /etc/nginx/ssl/inception.crt \
-       -keyout /etc/nginx/ssl/inception.key \
-       -subj "/C=FR/ST=Paris/L=Paris/O=42 School/OU=jo-tan/CN=jo-tan.42.fr/"
+RUN openssl req -x509 -sha256 -nodes -days 365 \
+    -newkey rsa:2048 \
+    -keyout /etc/ssl/private/nginx-selfsigned.key \
+    -out /etc/ssl/certs/nginx-selfsigned.crt \
+    -subj "/C=FR/ST=Ile-de-France/L=Paris/O=42/OU=jo-tan42/CN=jo-tan.42.fr/"
 
-#copy nginx configuration file
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+RUN ln -s /etc/nginx/sites-available/jo-tan.42.fr.conf /etc/nginx/sites-enabled/jo-tan.42.fr.conf
 
-RUN mkdir -p /run/nginx
+EXPOSE 443
 
-#expose port
-EXPOSE 443 80
+STOPSIGNAL SIGQUIT
 
-#define cmd to run when the container starts: -g "daemon off" ensure NGINX runs in foreground for Docker Container to stay alive
 CMD ["nginx", "-g", "daemon off;"]
