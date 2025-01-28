@@ -1,0 +1,47 @@
+FROM php:8.2-fpm-alpine
+
+# Install required PHP extensions and dependencies
+RUN apk update && apk upgrade && \
+    apk add --no-cache \
+        curl \
+        less \
+        mariadb-client \
+        zip \
+        unzip \
+        libpng \
+        libpng-dev \
+        libjpeg-turbo \
+        libjpeg-turbo-dev \
+        libzip-dev && \
+    docker-php-ext-configure gd --with-jpeg && \
+    docker-php-ext-install -j$(nproc) \
+        pdo_mysql \
+        mysqli \
+        gd \
+        zip && \
+    apk del libpng-dev libjpeg-turbo-dev libzip-dev && \
+    rm -rf /var/cache/apk/*
+
+# Install wp-cli
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
+
+# Set working directory
+WORKDIR /var/www/html/wordpress
+
+# Download and extract WordPress
+RUN wp core download --allow-root
+
+# Copy wp-config setup script
+COPY ./tools/wp-setup.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/wp-setup.sh
+
+# Switch to non-root user
+RUN adduser -u 82 -D -S -G www-data www-data    # Create www-data user with UID 82
+RUN chown -R www-data:www-data /var/www/html
+
+USER www-data
+
+# Start PHP-FPM
+CMD ["php-fpm", "-F"]
