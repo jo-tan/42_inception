@@ -14,9 +14,10 @@ RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt \
     -keyout /etc/nginx/ssl/inception.key \
     -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=jo-tan.42.fr/UID=jo-tan"
 
-# Set up permissions
-RUN chmod 755 /var/www/html
-RUN if getent group www-data > /dev/null 2>&1; then \
+# Create required nginx directories and set permissions
+RUN mkdir -p /var/lib/nginx/body /var/lib/nginx/proxy /var/lib/nginx/fastcgi && \
+    mkdir -p /var/cache/nginx && \
+    if getent group www-data > /dev/null 2>&1; then \
         groupmod -g 82 www-data; \
     else \
         groupadd -g 82 www-data; \
@@ -25,11 +26,14 @@ RUN if getent group www-data > /dev/null 2>&1; then \
         usermod -u 82 www-data; \
     else \
         useradd -u 82 -g www-data www-data; \
-    fi
-RUN chown -R www-data:www-data /var/www/html
-RUN chown -R www-data:www-data /var/log/nginx
-RUN chown -R www-data:www-data /var/run/nginx
-RUN chown -R www-data:www-data /etc/nginx/ssl
+    fi && \
+    chown -R www-data:www-data /var/lib/nginx && \
+    chown -R www-data:www-data /var/log/nginx && \
+    chown -R www-data:www-data /var/cache/nginx && \
+    chown -R www-data:www-data /etc/nginx/ssl && \
+    chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/lib/nginx && \
+    chmod -R 755 /var/cache/nginx
 
 # Copy configuration
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
