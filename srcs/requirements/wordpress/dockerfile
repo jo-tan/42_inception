@@ -20,6 +20,8 @@ RUN apk update && apk upgrade && \
         mysqli \
         gd \
         zip && \
+    # Make sure the zip extension is properly installed
+    docker-php-ext-enable zip && \
     apk del libpng-dev libjpeg-turbo-dev libzip-dev && \
     rm -rf /var/cache/apk/*
 
@@ -34,6 +36,8 @@ WORKDIR /var/www/html/wordpress
 # Download and extract WordPress
 RUN wp core download --allow-root
 
+# Copy PHP-FPM configuration
+COPY ./conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 # Copy wp-config setup script
 COPY ./tools/wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
