@@ -5,7 +5,7 @@
 # Variables for better maintainability
 COMPOSE_FILE = ./srcs/docker-compose.yml
 DOCKER = docker compose -f $(COMPOSE_FILE)
-DATA_PATH = /home/jo-tan/data
+DATA_PATH = /home/ctan/data
 
 
 # Default target - creates directories and starts services
