@@ -11,8 +11,8 @@ RUN chmod 644 /etc/mysql/conf.d/custom.cnf && \
     chmod +x /docker-entrypoint-initdb.d/init-db.sh
 
 # Create mysql user with specific UID for consistency
-RUN groupadd -g 999 mysql && \
-    useradd -u 999 -g mysql mysql && \
+RUN getent group mysql || groupadd -g 999 mysql && \
+    getent passwd mysql || useradd -u 999 -g mysql mysql && \
     chown -R mysql:mysql /var/lib/mysql
 
 USER mysql
