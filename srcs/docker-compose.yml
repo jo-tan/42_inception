@@ -16,10 +16,10 @@ services:
       - inception
     restart: unless-stopped
     environment:
-      - SQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - SQL_DATABASE=${MYSQL_DATABASE}
-      - SQL_USER=${MYSQL_USER}
-      - SQL_PASSWORD=${MYSQL_PASSWORD}
+      - SQL_ROOT_PASSWORD=${SQL_ROOT_PASSWORD}
+      - SQL_DATABASE=${SQL_DATABASE}
+      - SQL_USER=${SQL_USER}
+      - SQL_PASSWORD=${SQL_PASSWORD}
     healthcheck:
       test: mysqladmin ping --host=localhost -p${SQL_ROOT_PASSWORD}
       interval: 5s
