@@ -9,6 +9,7 @@ RUN apk update && apk upgrade && \
         zip \
         unzip \
         libpng \
+        shadow \
         libpng-dev \
         libjpeg-turbo \
         libjpeg-turbo-dev \
