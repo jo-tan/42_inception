@@ -5,13 +5,13 @@
 # Variables for better maintainability
 COMPOSE_FILE = ./srcs/docker-compose.yml
 DOCKER = docker compose -f $(COMPOSE_FILE)
-DATA_PATH = /home/ctan/data/
+DATA_PATH = /home/ctan/data
 
 
 # Default target - creates directories and starts services
 all: build
-	mkdir -p $(DATA_PATH)mariadb
-	mkdir -p $(DATA_PATH)wordpress
+	mkdir -p $(DATA_PATH)/mariadb
+	mkdir -p $(DATA_PATH)/wordpress
 	$(DOCKER) up -d
 
 # Build images without starting containers
