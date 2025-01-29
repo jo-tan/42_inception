@@ -33,10 +33,10 @@ RUN mkdir -p /var/lib/nginx/body /var/lib/nginx/proxy /var/lib/nginx/fastcgi && 
     chown -R www-data:www-data /var/cache/nginx && \
     chown -R www-data:www-data /etc/nginx/ssl && \
     chown -R www-data:www-data /var/www/html && \
-    chown -R www-data:www-data /run/nginx.pid && \
+    chown -R www-data:www-data /run/nginx && \
     chmod -R 755 /var/lib/nginx && \
     chmod -R 755 /var/cache/nginx && \
-    chmod -R 755 /run/nginx.pid && \
+    chmod -R 755 /run/nginx && \
     chmod -R 755 /etc/nginx/ssl
 
 # Copy configuration
