@@ -69,7 +69,7 @@ PHP
             <li>🐳 Docker containerization</li>
         </ul>' \
         --post_status=publish \
-        --post_author=$WORDPRESS_ADMIN_USER \
+        --post_author=1 \
         --comment_status=open \
         --allow-root
 
@@ -95,7 +95,7 @@ PHP
             <li>Change site settings</li>
         </ul>' \
         --post_status=publish \
-        --post_author=$WORDPRESS_USER \
+        --post_author=$AUTHOR_ID \
         --comment_status=open \
         --allow-root
 
