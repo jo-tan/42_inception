@@ -1,7 +1,10 @@
 #!/bin/sh
 
-# Check if database is initialized
+# Initialize database if not already done
 if [ ! -d "/var/lib/mysql/mysql" ]; then
+    # Initialize MariaDB data directory
+    mysql_install_db --user=mysql --datadir=/var/lib/mysql --skip-test-db
+
     # Start MariaDB in background
     mysqld --user=mysql --datadir=/var/lib/mysql &
     
@@ -15,8 +18,7 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     CREATE DATABASE IF NOT EXISTS ${SQL_DATABASE};
     CREATE USER IF NOT EXISTS '${SQL_USER}'@'%' IDENTIFIED BY '${SQL_PASSWORD}';
     GRANT ALL PRIVILEGES ON ${SQL_DATABASE}.* TO '${SQL_USER}'@'%';
-    GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}' WITH GRANT OPTION;
-    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${SQL_ROOT_PASSWORD}' WITH GRANT OPTION;
+    ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';
     FLUSH PRIVILEGES;
 EOF
 
@@ -24,5 +26,9 @@ EOF
     mysqladmin -u root -p${SQL_ROOT_PASSWORD} shutdown
 fi
 
-# Start MariaDB in foreground
-exec mysqld --user=mysql --datadir=/var/lib/mysql
+# Start MariaDB with explicit network settings
+exec mysqld --user=mysql \
+    --datadir=/var/lib/mysql \
+    --bind-address=0.0.0.0 \
+    --port=3306 \
+    --skip-networking=0
