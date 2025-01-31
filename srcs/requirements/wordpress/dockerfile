@@ -52,5 +52,4 @@ RUN if getent passwd www-data > /dev/null 2>&1; then \
 
 USER www-data
 
-# Change CMD to run our setup script
 CMD ["/usr/local/bin/wp-setup.sh"]
