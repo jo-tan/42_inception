@@ -6,11 +6,11 @@ echo "DB_HOST: $WORDPRESS_DB_HOST"
 echo "DB_NAME: $WORDPRESS_DB_NAME"
 echo "DB_USER: $WORDPRESS_DB_USER"
 
-# Add --ssl-mode=DISABLED to disable SSL requirement
-while ! mariadb-admin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --ssl-mode=DISABLED --verbose; do
+# Use --skip-ssl flag instead of --ssl-mode=DISABLED
+while ! mariadb-admin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --skip-ssl --verbose; do
     echo "Waiting for MariaDB to be ready..."
     # Try to get more specific error information
-    mariadb -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --ssl-mode=DISABLED -e "SELECT 1;" 2>&1
+    mariadb -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --skip-ssl -e "SELECT 1;" 2>&1
     sleep 3
 done
 
