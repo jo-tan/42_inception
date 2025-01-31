@@ -1,17 +1,9 @@
 #!/bin/sh
 
-# Print environment variables for debugging (remove sensitive info in production)
-echo "Checking database connection..."
-echo "DB_HOST: $WORDPRESS_DB_HOST"
-echo "DB_NAME: $WORDPRESS_DB_NAME"
-echo "DB_USER: $WORDPRESS_DB_USER"
-
-# Use --skip-ssl flag instead of --ssl-mode=DISABLED
-while ! mariadb-admin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --skip-ssl --verbose; do
+# Wait for MySQL to be ready
+while ! mysql -h$WORDPRESS_DB_HOST -u$WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD $WORDPRESS_DB_NAME --silent; do
     echo "Waiting for MariaDB to be ready..."
-    # Try to get more specific error information
-    mariadb -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --skip-ssl -e "SELECT 1;" 2>&1
-    sleep 3
+    sleep 1
 done
 
 # Check if WordPress is already configured
@@ -23,10 +15,6 @@ if [ ! -f wp-config.php ]; then
         --dbuser="$WORDPRESS_DB_USER" \
         --dbpass="$WORDPRESS_DB_PASSWORD" \
         --dbhost="$WORDPRESS_DB_HOST" \
-        --extra-php <<PHP
-define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT);
-define('MYSQL_SSL_MODE', 'DISABLED');
-PHP
         --allow-root
 
     echo "Installing WordPress core..."
