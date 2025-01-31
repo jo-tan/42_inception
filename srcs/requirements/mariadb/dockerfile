@@ -1,18 +1,26 @@
-FROM mariadb:10.11-jammy
+FROM alpine:3.17
+
+# Install MariaDB
+RUN apk update && apk add --no-cache \
+    mariadb \
+    mariadb-client \
+    mariadb-server-utils \
+    && mkdir -p /run/mysqld \
+    && chown -R mysql:mysql /run/mysqld \
+    && chown -R mysql:mysql /var/lib/mysql
 
 # Copy custom MariaDB configuration
 COPY ./conf/my.cnf /etc/mysql/conf.d/custom.cnf
 
-# Copy initialization script
-COPY ./tools/init-db.sh /docker-entrypoint-initdb.d/
+# Copy and set up initialization script
+COPY ./tools/init-db.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/init-db.sh
 
-# Set permissions
-RUN chmod 644 /etc/mysql/conf.d/custom.cnf && \
-    chmod +x /docker-entrypoint-initdb.d/init-db.sh
-
-# Create mysql user with specific UID for consistency
-RUN getent group mysql || groupadd -g 999 mysql && \
-    getent passwd mysql || useradd -u 999 -g mysql mysql && \
+# Create mysql user
+RUN addgroup -g 999 mysql && \
+    adduser -u 999 -G mysql -h /var/lib/mysql -s /sbin/nologin -D mysql && \
     chown -R mysql:mysql /var/lib/mysql
 
 USER mysql
+
+ENTRYPOINT ["init-db.sh"]
