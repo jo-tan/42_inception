@@ -1,10 +1,7 @@
 #!/bin/sh
 
-# Initialize database if not already done
+# Check if database is initialized
 if [ ! -d "/var/lib/mysql/mysql" ]; then
-    # Initialize MariaDB data directory
-    mysql_install_db --user=mysql --datadir=/var/lib/mysql --skip-test-db
-
     # Start MariaDB in background
     mysqld --user=mysql --datadir=/var/lib/mysql &
     
