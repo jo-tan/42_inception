@@ -41,23 +41,55 @@ PHP
         --allow-root
 
     echo "Creating additional user..."
-    # Create additional user if needed
+    # Change the role to 'author' to see clear differences
     wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_EMAIL" \
         --role=author \
         --user_pass="$WORDPRESS_USER_PASSWORD" \
         --allow-root
 
-    # Install and activate Twenty Twenty theme
-    echo "Installing and activating theme..."
-    wp theme install twentytwenty --activate --allow-root
+    # Install and activate a more colorful theme
+    echo "Installing and activating colorful theme..."
+    wp theme install inspiro --activate --allow-root
 
-    # Create a test post with comments enabled
-    echo "Creating sample post..."
+    # Create demo posts with images
+    echo "Creating admin post..."
     wp post create \
         --post_type=post \
-        --post_title='Welcome to Inception' \
-        --post_content='This is a test post. Feel free to leave a comment below to test the database functionality!' \
+        --post_title='🚀 Welcome to Inception!' \
+        --post_content='<h2>👋 Hello Docker Enthusiasts!</h2>
+        <p>This post is created by the admin. Feel free to explore and leave comments below!</p>
+        <h3>✨ Key Features:</h3>
+        <ul>
+            <li>🔒 Secure HTTPS connection</li>
+            <li>🗄️ MariaDB database</li>
+            <li>⚡ Nginx web server</li>
+            <li>🐳 Docker containerization</li>
+        </ul>' \
         --post_status=publish \
+        --post_author=$WORDPRESS_ADMIN_USER \
+        --comment_status=open \
+        --allow-root
+
+    echo "Creating author post..."
+    wp post create \
+        --post_type=post \
+        --post_title='🎨 Author Post - Exploring User Roles' \
+        --post_content='<h2>🔍 Testing Different User Permissions</h2>
+        <p>This post is created by an author user. Notice the different capabilities between admin and author roles!</p>
+        <h3>📝 Author Can:</h3>
+        <ul>
+            <li>✅ Create new posts</li>
+            <li>✅ Upload media</li>
+            <li>✅ Moderate comments on their posts</li>
+        </ul>
+        <h3>❌ Author Cannot:</h3>
+        <ul>
+            <li>Install themes or plugins</li>
+            <li>Modify other users posts</li>
+            <li>Change site settings</li>
+        </ul>' \
+        --post_status=publish \
+        --post_author=$WORDPRESS_USER \
         --comment_status=open \
         --allow-root
 
@@ -67,6 +99,9 @@ PHP
     # Configure permalinks
     echo "Configuring permalinks..."
     wp rewrite structure '/%postname%/' --allow-root
+
+    # Set up some theme customization
+    wp option update blogdescription "A Docker-powered WordPress Site" --allow-root
 fi
 
 echo "Starting PHP-FPM..."
