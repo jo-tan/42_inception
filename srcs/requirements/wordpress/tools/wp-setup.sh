@@ -46,6 +46,27 @@ PHP
         --role=author \
         --user_pass="$WORDPRESS_USER_PASSWORD" \
         --allow-root
+
+    # Install and activate Twenty Twenty theme
+    echo "Installing and activating theme..."
+    wp theme install twentytwenty --activate --allow-root
+
+    # Create a test post with comments enabled
+    echo "Creating sample post..."
+    wp post create \
+        --post_type=post \
+        --post_title='Welcome to Inception' \
+        --post_content='This is a test post. Feel free to leave a comment below to test the database functionality!' \
+        --post_status=publish \
+        --comment_status=open \
+        --allow-root
+
+    # Enable comments globally
+    wp option update default_comment_status 'open' --allow-root
+
+    # Configure permalinks
+    echo "Configuring permalinks..."
+    wp rewrite structure '/%postname%/' --allow-root
 fi
 
 echo "Starting PHP-FPM..."
