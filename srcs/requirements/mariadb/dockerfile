@@ -6,19 +6,22 @@ RUN apk update && apk add --no-cache \
     mariadb-client \
     mariadb-server-utils \
     && mkdir -p /run/mysqld \
+    && mkdir -p /var/lib/mysql
+
+# Set up permissions
+RUN chown -R mysql:mysql /var/lib/mysql \
     && chown -R mysql:mysql /run/mysqld \
-    && chown -R mysql:mysql /var/lib/mysql
+    && chown -R mysql:mysql /usr/lib/mariadb \
+    && chown -R mysql:mysql /usr/bin
 
 # Copy custom MariaDB configuration
 COPY ./conf/my.cnf /etc/mysql/conf.d/custom.cnf
 
 # Copy and set up initialization script
 COPY ./tools/init-db.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/init-db.sh
-
-# No need to create mysql user/group as they're created by the mariadb package
-RUN chown -R mysql:mysql /var/lib/mysql
+RUN chmod +x /usr/local/bin/init-db.sh \
+    && chown -R mysql:mysql /usr/local/bin/init-db.sh
 
 USER mysql
 
-ENTRYPOINT ["/usr/local/bin/init-db.sh"]
+ENTRYPOINT ["init-db.sh"]
