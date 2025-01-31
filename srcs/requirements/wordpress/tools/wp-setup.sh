@@ -1,12 +1,14 @@
 #!/bin/sh
 
 # Wait for MariaDB to be ready
-while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
+while ! mariadb-admin ping -h"$WORDPRESS_DB_HOST" --silent; do
+    echo "Waiting for MariaDB to be ready..."
     sleep 1
 done
 
 # Check if WordPress is already configured
 if [ ! -f wp-config.php ]; then
+    echo "Creating wp-config.php..."
     # Create wp-config.php
     wp config create \
         --dbname="$WORDPRESS_DB_NAME" \
@@ -15,6 +17,7 @@ if [ ! -f wp-config.php ]; then
         --dbhost="$WORDPRESS_DB_HOST" \
         --allow-root
 
+    echo "Installing WordPress core..."
     # Install WordPress
     wp core install \
         --url="https://$DOMAIN_NAME" \
@@ -25,6 +28,7 @@ if [ ! -f wp-config.php ]; then
         --skip-email \
         --allow-root
 
+    echo "Creating additional user..."
     # Create additional user if needed
     wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_EMAIL" \
         --role=author \
@@ -32,5 +36,6 @@ if [ ! -f wp-config.php ]; then
         --allow-root
 fi
 
+echo "Starting PHP-FPM..."
 # Start PHP-FPM
 exec php-fpm
