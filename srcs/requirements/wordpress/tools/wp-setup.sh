@@ -46,6 +46,9 @@ PHP
         --role=author \
         --user_pass="$WORDPRESS_USER_PASSWORD" \
         --allow-root
+    # Get the user ID after creation
+    AUTHOR_ID=$(wp user get "$WORDPRESS_USER" --field=ID --allow-root)
+    echo "Author ID is: $AUTHOR_ID"  # Debug output
 
     # Install and activate a more colorful theme
     echo "Installing and activating colorful theme..."
