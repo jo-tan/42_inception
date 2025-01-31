@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Wait for MySQL to be ready
-while ! mysql -h$WORDPRESS_DB_HOST -u$WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD $WORDPRESS_DB_NAME --silent; do
+while ! mysql -h $WORDPRESS_DB_HOST -u $WORDPRESS_DB_USER -p $WORDPRESS_DB_PASSWORD $WORDPRESS_DB_NAME --silent; do
     echo "Waiting for MariaDB to be ready..."
     sleep 1
 done
