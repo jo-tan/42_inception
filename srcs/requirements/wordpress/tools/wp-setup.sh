@@ -56,7 +56,10 @@ PHP
     wp post create \
         --post_type=post \
         --post_title='🚀 Welcome to Inception!' \
-        --post_content='<h2>👋 Hello Docker Enthusiasts!</h2>
+        --post_content='<div style="background-color: #f0f8ff; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+            <p style="color: #666; margin: 0;">📝 Written by <strong>Admin (supervisor)</strong></p>
+        </div>
+        <h2>👋 Hello Docker Enthusiasts!</h2>
         <p>This post is created by the admin. Feel free to explore and leave comments below!</p>
         <h3>✨ Key Features:</h3>
         <ul>
@@ -74,7 +77,10 @@ PHP
     wp post create \
         --post_type=post \
         --post_title='🎨 Author Post - Exploring User Roles' \
-        --post_content='<h2>🔍 Testing Different User Permissions</h2>
+        --post_content='<div style="background-color: #f0fff0; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+            <p style="color: #666; margin: 0;">📝 Written by <strong>Author (user1)</strong></p>
+        </div>
+        <h2>🔍 Testing Different User Permissions</h2>
         <p>This post is created by an author user. Notice the different capabilities between admin and author roles!</p>
         <h3>📝 Author Can:</h3>
         <ul>
