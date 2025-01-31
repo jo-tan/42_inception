@@ -1,9 +1,17 @@
 #!/bin/sh
 
-# Wait for MariaDB to be ready
-while ! mariadb-admin ping -h"$WORDPRESS_DB_HOST" --silent; do
+# Print environment variables for debugging (remove sensitive info in production)
+echo "Checking database connection..."
+echo "DB_HOST: $WORDPRESS_DB_HOST"
+echo "DB_NAME: $WORDPRESS_DB_NAME"
+echo "DB_USER: $WORDPRESS_DB_USER"
+
+# Add -v flag for verbose output
+while ! mariadb-admin ping -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" --verbose; do
     echo "Waiting for MariaDB to be ready..."
-    sleep 1
+    # Try to get more specific error information
+    mariadb -h"$WORDPRESS_DB_HOST" -u"$WORDPRESS_DB_USER" -p"$WORDPRESS_DB_PASSWORD" -e "SELECT 1;" 2>&1
+    sleep 3
 done
 
 # Check if WordPress is already configured
