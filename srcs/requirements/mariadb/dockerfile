@@ -1,28 +1,20 @@
 FROM alpine:3.20
 
-# Install MariaDB
 RUN apk update && apk add --no-cache \
     mariadb \
-    mariadb-client \
-    mariadb-server-utils \
-    && mkdir -p /run/mysqld \
-    && mkdir -p /var/lib/mysql
+    mariadb-client
 
-# Set up permissions
-RUN chown -R mysql:mysql /var/lib/mysql \
-    && chown -R mysql:mysql /run/mysqld
+# Create necessary directories with proper permissions
+RUN mkdir -p /var/lib/mysql /var/run/mysqld && \
+    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld && \
+    chmod 777 /var/run/mysqld
 
-# Copy custom MariaDB configuration
-COPY ./conf/my.cnf /etc/mysql/conf.d/custom.cnf
+# Copy initialization script
+COPY tools/init-db.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
-# Copy and set up initialization script
-COPY ./tools/init-db.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/init-db.sh
+USER root
 
-# Initialize database as root
-RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql --skip-test-db
+EXPOSE 3306
 
-# Switch to mysql user for running the service
-USER mysql
-
-ENTRYPOINT ["init-db.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
