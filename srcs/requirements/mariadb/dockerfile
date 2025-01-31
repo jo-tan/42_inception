@@ -16,10 +16,8 @@ COPY ./conf/my.cnf /etc/mysql/conf.d/custom.cnf
 COPY ./tools/init-db.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/init-db.sh
 
-# Create mysql user
-RUN addgroup -g 999 mysql && \
-    adduser -u 999 -G mysql -h /var/lib/mysql -s /sbin/nologin -D mysql && \
-    chown -R mysql:mysql /var/lib/mysql
+# No need to create mysql user/group as they're created by the mariadb package
+RUN chown -R mysql:mysql /var/lib/mysql
 
 USER mysql
 
