@@ -23,6 +23,10 @@ if [ ! -f wp-config.php ]; then
         --dbuser="$WORDPRESS_DB_USER" \
         --dbpass="$WORDPRESS_DB_PASSWORD" \
         --dbhost="$WORDPRESS_DB_HOST" \
+        --extra-php <<PHP
+define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT);
+define('MYSQL_SSL_MODE', 'DISABLED');
+PHP
         --allow-root
 
     echo "Installing WordPress core..."
