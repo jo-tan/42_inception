@@ -47,8 +47,8 @@ clean:
 # Full cleanup (including images and volumes)
 fclean: clean
 	docker system prune -af --volumes
-	rm -rf $(DATA_PATH)/wordpress
-	rm -rf $(DATA_PATH)/mariadb
+	sudo rm -rf $(DATA_PATH)/wordpress
+	sudo rm -rf $(DATA_PATH)/mariadb
 
 # Rebuild everything
 re: fclean all
