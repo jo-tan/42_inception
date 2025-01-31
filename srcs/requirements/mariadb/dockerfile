@@ -10,11 +10,11 @@ RUN mkdir -p /var/lib/mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld
 
 # Copy initialization script
-COPY tools/init-db.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+COPY tools/init-db.sh /init-db.sh
+RUN chmod +x /init-db.sh
 
 USER root
 
 EXPOSE 3306
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/init-db.sh"]
