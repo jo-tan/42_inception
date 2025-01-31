@@ -21,4 +21,4 @@ RUN chown -R mysql:mysql /var/lib/mysql
 
 USER mysql
 
-ENTRYPOINT ["init-db.sh"]
+ENTRYPOINT ["/usr/local/bin/init-db.sh"]
