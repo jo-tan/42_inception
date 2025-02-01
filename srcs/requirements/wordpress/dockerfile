@@ -47,6 +47,19 @@ COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
 COPY ./tools/wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
 
+# Create required directories and set permissions before switching user
+RUN mkdir -p /var/www/html/wordpress && \
+    mkdir -p /var/run/php && \
+    mkdir -p /var/log/php82 && \
+    touch /var/log/php82/error.log && \
+    chown -R www-data:www-data /var/www/ && \
+    chown -R www-data:www-data /var/run/php && \
+    chown -R www-data:www-data /var/log/php82 && \
+    chmod 755 /var/www/html/wordpress && \
+    chmod 755 /var/run/php && \
+    chmod 755 /var/log/php82 && \
+    chmod 644 /var/log/php82/error.log
+
 # Switch to non-root user
 RUN if getent group www-data > /dev/null 2>&1; then \
         groupmod -g 4242 www-data; \
@@ -57,12 +70,7 @@ RUN if getent group www-data > /dev/null 2>&1; then \
         usermod -u 4242 -g 4242 www-data; \
     else \
         adduser -u 4242 -G www-data -D www-data; \
-    fi && \
-    chown -R www-data:www-data /var/www/
-
-    # Create required directories and set permissions
-RUN mkdir -p /var/run/php && \
-    chown -R www-data:www-data /var/run/php
+    fi
 
 USER www-data
 
