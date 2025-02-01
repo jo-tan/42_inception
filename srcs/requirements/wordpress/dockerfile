@@ -47,6 +47,18 @@ COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
 COPY ./tools/wp-setup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/wp-setup.sh
 
+#Create user and group w/ ID 4242
+RUN if getent group www-data > /dev/null 2>&1; then \
+        groupmod -g 4242 www-data; \
+    else \
+        addgroup -g 4242 www-data; \
+    fi && \
+    if getent passwd www-data > /dev/null 2>&1; then \
+        usermod -u 4242 -g 4242 www-data; \
+    else \
+        adduser -u 4242 -G www-data -D www-data; \
+    fi
+
 # Create required directories and set permissions before switching user
 RUN mkdir -p /var/www/html/wordpress && \
     mkdir -p /var/run/php && \
@@ -61,17 +73,6 @@ RUN mkdir -p /var/www/html/wordpress && \
     chmod 644 /var/log/php82/error.log
 
 # Switch to non-root user
-RUN if getent group www-data > /dev/null 2>&1; then \
-        groupmod -g 4242 www-data; \
-    else \
-        addgroup -g 4242 www-data; \
-    fi && \
-    if getent passwd www-data > /dev/null 2>&1; then \
-        usermod -u 4242 -g 4242 www-data; \
-    else \
-        adduser -u 4242 -G www-data -D www-data; \
-    fi
-
 USER www-data
 
 CMD ["/usr/local/bin/wp-setup.sh"]
