@@ -60,10 +60,10 @@ RUN if getent group www-data > /dev/null 2>&1; then \
     fi && \
     chown -R www-data:www-data /var/www/
 
-USER www-data
-
-# Create required directories and set permissions
+    # Create required directories and set permissions
 RUN mkdir -p /var/run/php && \
     chown -R www-data:www-data /var/run/php
+
+USER www-data
 
 CMD ["/usr/local/bin/wp-setup.sh"]
