@@ -23,20 +23,7 @@ RUN apk update && apk upgrade && \
         php82-xml \
         php82-simplexml \
         php82-session \
-        php82-tokenizer \
-        libpng-dev \
-        libjpeg-turbo \
-        libjpeg-turbo-dev \
-        libzip-dev && \
-    docker-php-ext-configure gd --with-jpeg && \
-    docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
-        mysqli \
-        gd \
-        zip && \
-    # Make sure the zip extension is properly installed
-    docker-php-ext-enable zip && \
-    apk del libpng-dev libjpeg-turbo-dev libzip-dev && \
+        php82-tokenizer &&\
     rm -rf /var/cache/apk/*
 
 # Create symlinks for php82 to php
