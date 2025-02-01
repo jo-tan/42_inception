@@ -19,14 +19,14 @@ RUN mkdir -p /var/lib/nginx/body /var/lib/nginx/proxy /var/lib/nginx/fastcgi && 
     mkdir -p /var/cache/nginx && \
     mkdir -p /run/nginx && \
     if getent group www-data > /dev/null 2>&1; then \
-        groupmod -g 82 www-data; \
+        groupmod -g 4242 www-data; \
     else \
-        groupadd -g 82 www-data; \
+        groupadd -g 4242 www-data; \
     fi && \
     if getent passwd www-data > /dev/null 2>&1; then \
-        usermod -u 82 www-data; \
+        usermod -u 4242 www-data; \
     else \
-        useradd -u 82 -g www-data www-data; \
+        useradd -u 4242 -g www-data www-data; \
     fi && \
     chown -R www-data:www-data /var/lib/nginx && \
     chown -R www-data:www-data /var/log/nginx && \

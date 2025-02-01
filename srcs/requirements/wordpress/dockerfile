@@ -49,9 +49,9 @@ RUN chmod +x /usr/local/bin/wp-setup.sh
 
 # Switch to non-root user
 RUN if getent passwd www-data > /dev/null 2>&1; then \
-        usermod -u 82 www-data; \
+        usermod -u 4242 www-data; \
     else \
-        adduser -u 82 www-data; \
+        adduser -u 4242 www-data; \
     fi && \
     chown -R www-data:www-data /var/www/
 
