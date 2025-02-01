@@ -100,4 +100,4 @@ fi
 
 echo "Starting PHP-FPM..."
 # Start PHP-FPM
-exec php-fpm
+exec php-fpm -F
